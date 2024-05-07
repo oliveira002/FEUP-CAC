@@ -160,11 +160,5 @@ cython_debug/
 #.idea/
 
 
-# Ignore all CSV files
-*.csv
-
-# Except for the following
-!*_sampled.csv
-
 .vs/
 .idea/
