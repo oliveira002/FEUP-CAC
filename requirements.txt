@@ -1,0 +1,12 @@
+contractions==0.1.73
+matplotlib==3.8.4
+nltk==3.8.1
+numpy==1.26.4
+pandas==2.2.2
+plotly==5.22.0
+scikit_learn==1.4.2
+seaborn==0.13.2
+textblob==0.18.0.post0
+utils==1.0.2
+emoji==1.2.0
+wordcloud==1.9.3
