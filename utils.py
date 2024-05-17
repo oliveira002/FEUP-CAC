@@ -19,6 +19,8 @@ import plotly.express as ex
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.decomposition import TruncatedSVD
 from sklearn.svm import SVC
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
 
 warnings.simplefilter(action='ignore')
 nltk.download('wordnet')
@@ -208,3 +210,43 @@ def plot_avg_word_length_distribution_multi(*dfs):
     plt.tight_layout()
     plt.xlim([0, 20])  # Adjust the x-axis limits if needed
     plt.show()
+
+def get_tweets_by_date(df, date):
+    """
+    Function to retrieve tweets for a specific date.
+    
+    Parameters:
+    - df: DataFrame containing the tweets.
+    - date: String in 'YYYY-MM-DD' format or a datetime.date object.
+    
+    Returns:
+    - DataFrame containing tweets for the specified date.
+    """
+    # Convert input date to datetime.date if it's a string
+    if isinstance(date, str):
+        date = pd.to_datetime(date).date()
+    
+    # Filter the DataFrame for the specified date
+    tweets_on_date = df[df['date'] == date]
+    
+    return tweets_on_date[['orig_text','clean_text']]
+
+def topic_modelling(df):
+    tfidf_vectorizer = TfidfVectorizer(max_features = 40000, max_df=0.95, min_df=2)
+    tfidf_matrix = tfidf_vectorizer.fit_transform(df['clean_text'])
+
+    
+    num_topics = 4 
+    lda = LatentDirichletAllocation(n_components=num_topics, random_state=42)
+    lda.fit(tfidf_matrix)
+
+
+    def display_topics(model, feature_names, no_top_words):
+        for topic_idx, topic in enumerate(model.components_):
+            print(f"Topic {topic_idx+1}:")
+            print(" ".join([feature_names[i]
+                            for i in topic.argsort()[:-no_top_words - 1:-1]]))
+
+    no_top_words = 15  # Number of top words to display for each topic
+    feature_names = tfidf_vectorizer.get_feature_names_out()
+    display_topics(lda, feature_names, no_top_words)
