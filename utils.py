@@ -227,7 +227,7 @@ def get_tweets_by_date(df, date):
         date = pd.to_datetime(date).date()
     
     # Filter the DataFrame for the specified date
-    tweets_on_date = df[df['date'] == date]
+    tweets_on_date = df[df['date_'] == date]
     
     return tweets_on_date[['orig_text','clean_text']]
 
